@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/dustin/go-humanize"
 	"github.com/gonum/plot"
 	"github.com/gonum/plot/plotter"
 	"github.com/gonum/plot/vg"
@@ -24,9 +24,8 @@ type ticks struct {
 
 func (tt *ticks) Ticks(min, max float64) (t []plot.Tick) {
 	x := (max - min) / 10
-	t = append(t, plot.Tick{Value: 0, Label: "0"})
 	for i := 0; i < 10; i++ {
-		t = append(t, plot.Tick{Value: min + x*float64(i), Label: fmt.Sprintf("%0.2f", min+x*float64(i))})
+		t = append(t, plot.Tick{Value: min + x*float64(i), Label: humanize.Commaf(min + x*float64(i))})
 	}
 	return
 }
