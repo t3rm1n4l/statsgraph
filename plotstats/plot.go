@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gonum/plot"
 	"github.com/gonum/plot/plotter"
 	"github.com/gonum/plot/vg"
@@ -9,11 +10,25 @@ import (
 
 var colors = []color.RGBA{
 	color.RGBA{R: 53, G: 142, B: 242, A: 255},
-	color.RGBA{R: 40, G: 48, B: 68, A: 255},
-	color.RGBA{R: 120, G: 161, B: 187, A: 255},
-	color.RGBA{R: 139, G: 120, B: 109, A: 255},
+	color.RGBA{R: 255, G: 215, B: 0, A: 255},
+	color.RGBA{R: 220, G: 20, B: 60, A: 255},
+	color.RGBA{R: 255, G: 165, B: 0, A: 255},
 	color.RGBA{R: 93, G: 65, B: 75, A: 255},
-	color.RGBA{R: 80, G: 6, B: 36, A: 255},
+	color.RGBA{R: 0, G: 128, B: 0, A: 255},
+	color.RGBA{R: 138, G: 43, B: 226, A: 255},
+	color.RGBA{R: 255, G: 0, B: 0, A: 255},
+}
+
+type ticks struct {
+}
+
+func (tt *ticks) Ticks(min, max float64) (t []plot.Tick) {
+	x := (max - min) / 10
+	t = append(t, plot.Tick{Value: 0, Label: "0"})
+	for i := 0; i < 10; i++ {
+		t = append(t, plot.Tick{Value: min + x*float64(i), Label: fmt.Sprintf("%0.2f", min+x*float64(i))})
+	}
+	return
 }
 
 type Plot struct {
@@ -36,6 +51,12 @@ func NewPlot(title string) *Plot {
 	p.p.X.Label.Text = "time"
 	p.p.Add(plotter.NewGrid())
 
+	p.p.X.Min = 0
+	p.p.Y.Min = 0
+	p.p.Y.Padding = 0
+	p.p.X.Padding = 0
+	p.p.Y.Tick.Marker = &ticks{}
+
 	return p
 }
 
@@ -56,7 +77,7 @@ func (p *Plot) Write(f string) error {
 	for i, ln := range p.lines {
 		l, _ := plotter.NewLine(ln.pts)
 		l.LineStyle.Width = vg.Points(2)
-		l.LineStyle.Color = colors[i]
+		l.LineStyle.Color = colors[i%len(colors)]
 		p.p.Legend.Add(ln.name, l)
 		p.p.Add(l)
 	}

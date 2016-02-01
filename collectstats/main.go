@@ -34,6 +34,7 @@ func main() {
 		fd.Write(body)
 		fd.Write([]byte("\n"))
 
+		fmt.Print(".")
 		time.Sleep(time.Second * time.Duration(*frequency))
 	}
 
